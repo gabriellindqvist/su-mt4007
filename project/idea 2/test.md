@@ -1,3 +1,16 @@
+---
+title: "test"
+output: html_document
+---
+
+## This is a Markdown Heading
+
+Some text explaining the analysis.
+
+```{r}
+# This is an R code chunk
+print("Hello, R Markdown!")
+
 ```{r, echo = FALSE}
 # ------------------------------------ Install required packages ------------------------------------------
 # install.packages("tidyverse")
@@ -14,6 +27,7 @@ suppressPackageStartupMessages({
     library(fmsb)
     library(plotly)
     library(RColorBrewer)
+    IRKernel::installspec()
 })
 ```
 # Who Is The Better Striker? Alexander Isak vs. Viktor Gyökeres
