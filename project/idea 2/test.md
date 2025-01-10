@@ -332,4 +332,79 @@ Gyökeres' possession metrics emphasize his versatility and pivotal role in his 
 ## Radar Chart: Isak vs Gyökeres vs Strikers
 The final visualization is a side by side comparison using a radar chart, created using the package `fmsb`.
 
-```{r,}
+```{r, echo = FALSE}
+radar_stats <- df %>%
+    group_by(Player) %>%
+    summarise(
+        Goals90 = mean(GoalsPer90),
+        Assists90 = mean(AssistsPer90),
+        SoTPercentage = round(sum(SoTPer90) / sum(ShotsPer90), digits = 3) * 100,
+        GoalConversionRate = sum(Goals) / sum(Shots),
+        SuccessfulTakeOns = mean(SuccessfulTakeOnsPercent),
+        SCA90 = mean(SCAPer90),
+        GCA90 = mean(GCAPer90),
+        Progression90 = sum(PrgCPer90 + PrgPPer90 + PrgRPer90) / unique(n) # Average of total Progression per 90
+    )
+
+## OPTIONAL: display radar_stats and its summary
+#summary(radar_stats)
+#radar_stats %>% filter(Player %in% c("Alexander Isak", "Viktor Gyökeres"))
+
+# Manually construct the data frame for plotting the radar chart, based on the values in radar_stats
+comp_stats <- data.frame(
+    # variable = c(max, min, Isak recorded stat, Gyökeres recorded stat)
+    # max is the maximum value in each column found in radar_stats
+    Goals90 = c(1.005, 0, 0.820, 0.927),
+    Assists90 = c(0.3275, 0, 0.1100, 0.2225),
+    SoTPercentage = c(49.90, 0, 48.2, 45.5),
+    GoalConversionRate = c(0.2906, 0, 0.2632, 0.2844),
+    GCA90 = c(0.615, 0, 0.37, 0.61),
+    SCA90 = c(4.185, 0, 2.667, 4.185),
+    SuccessfulTakeOns = c(49.62, 0, 41.07, 37.08),
+    Progression90 = c(21.01, 0, 10.89, 15.84),
+    row.names = c("max", "min", "Alexander Isak", "Viktor Gyökeres")
+)
+
+colnames(comp_stats) <- c("Goals/90", "Assists/90", "SoT (%)", "Goal Conversion (%)", "GCA/90", "SCA/90", "Succ%", "Prg/90")
+
+# Define fill colors
+colors_fill <- c(
+    scales::alpha("gray", 0.4),
+    scales::alpha("green", 0.1)
+)
+
+# Define line colors
+colors_line <- c(
+    scales::alpha("black", 0.7),
+    scales::alpha("darkgreen", 0.7)
+)
+
+# Generate plot
+radarchart(
+    comp_stats,
+    seg = 9,
+    title = "Radar Chart: Isak vs. Gyökeres vs. Top Strikers 2023-2025",
+    pcol = colors_line,
+    pfcol = colors_fill,
+    plty = "solid",
+    plwd = 2,
+    cglty = "solid",
+    cglcol = "gray"
+ 
+)
+
+# Legend
+legend(
+    x = 0.5,
+    y = 1.33,
+    legend = rownames(comp_stats[-c(1, 2), ]),
+    bty = "n", pch = 20, col = colors_line, cex = 1.2, pt.cex = 3
+)
+```
+
+The radar chart consists of some importants metrics considered earlier; Goals per 90, Assists per 90, SoT% (Proportions of shots being on target), Goal Conversion% (Proportions of shots ending up as Goal), GCA/90, SCA/90, Succ% (Successful Take-Ons) and Prg/90 (Average of total progression metrics per 90). Each metrics upper bound is based on the datasets maximum value (e.g Gyökeres has the maximum recorded SCA90).
+
+Overall, the radar chart gives a quick summary of the two players strenghts and weaknesses relative to the other players in the data. Gyökeres
+
+## Conclusion
+It is important to highlight that these results should be interpreted cautiously, as differences in league strenght, team quality, and tactical systems might influence these metrics.
